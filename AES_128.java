@@ -297,7 +297,7 @@ public class AES_128 {
 		}
 	}
 	
-	public byte[] Encrypt(String plainText) {
+	public String Encrypt(String plainText) {
 		byte[] data = Encode(plainText);
 		byte[] key = new byte[16];
 		byte[] temp = new byte[16];
@@ -322,10 +322,22 @@ public class AES_128 {
 			
 			System.arraycopy(temp, 0, data, count * 16, temp.length);
 		}
-		return data;
+		String str = null;
+		try {
+			str = new String(data,"ISO8859-1");
+		} catch (UnsupportedEncodingException e) {
+			e.printStackTrace();
+		}
+		return str;
 	}
 
-	public String Decrypt(byte data[]) {
+	public String Decrypt(String str) {
+		byte[] data = null;
+		try {
+			data = str.getBytes("ISO8859-1");
+		} catch (UnsupportedEncodingException e) {
+			e.printStackTrace();
+		}
 		byte[] key = new byte[16];
 		byte[] temp = new byte[16];
 		for (int count = 0; count < data.length / 16; count++) {
@@ -474,8 +486,8 @@ public class AES_128 {
  * String key = "password";
  * AES_128 aes = new AES_128(key);
  * String text = "hello world.I'm IceTesla.This is a AES_128 demo.";
- * byte[] data = aes.Encrypt(text);
- * String result = aes.Decrypt(data);
+ * String str = aes.Encrypt(text);
+ * String result = aes.Decrypt(str);
  */
 		String key = "password";
 		AES_128 aes = new AES_128(key);
@@ -486,15 +498,13 @@ public class AES_128 {
 			System.out.print( "\t" + aes.key[i] );
 		System.out.println();
 
-		String text = "hello world.I'm IceTesla.This is a AES_128 demo.";
+		String text = "Hello world.I'm IceTesla.This is a AES_128 demo.";
 		System.out.println("PlainText:\n\t"+text);
 		
-		byte[] data = aes.Encrypt(text);
-		System.out.println("\nEncryptText:");
-		for (int i = 0; i < data.length; i++)
-			System.out.print("\t" + data[i]);
-
-		String result = aes.Decrypt(data);
+		String str = aes.Encrypt(text);
+		System.out.println("\nEncryptText:\n\t" + str);
+	
+		String result = aes.Decrypt(str);
 		System.out.println("\nDecodePlainText:\n\t"+result);
 
 	}
